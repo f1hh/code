@@ -1,11 +1,9 @@
 #include <stdio.h>
-#include <math.h>
-
-int main()
+#include <string.h>
+int main(void)
 {
-    int x, y, t;
-    x = y = 3;
-    t = ++x || ++y;
-    printf("%d", y);
-    return 0;
+    char a[10];
+    gets(a);
+    //scanf("%s", a);
+    puts(a);
 }
