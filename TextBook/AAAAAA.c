@@ -1,18 +1,25 @@
 #include <stdio.h>
-int main()
+int hcf(int u, int v)
 {
-    char a[40] = {0}, b[20] = {0};
-    int i = 0, j = 0, k = 0, m = 0;
-    scanf("%s", a);
-    scanf("%s", b);
-    while (a[i] != '\0')
+    return v ? hcf(v, u % v) : u;
+}
+
+int lcd(int u, int v, int h)
+{
+    return u * v / h;
+}
+
+int main(void)
+{
+    int a, b;
+    scanf("%d,%d", &a, &b);
+    if (a < b)
     {
-        i++;
+        int t = a;
+        a = b;
+        b = t;
     }
-    while (b[j] != '\0')
-    {
-        a[i++] = b[j++];
-    }
-    printf("%s\n", a);
-    return 0;
+    int h = hcf(a, b);
+    int l = lcd(a, b, h);
+    printf("H.C.F=%d\nL.C.D=%d\n", h, l);
 }
