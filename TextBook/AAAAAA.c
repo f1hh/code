@@ -1,25 +1,25 @@
 #include <stdio.h>
-int hcf(int u, int v)
+#include <string.h>
+int main()
 {
-    return v ? hcf(v, u % v) : u;
+    char str[80];
+    void insert(char[]);
+    // printf("input four digits:");
+    scanf("%s", str);
+    insert(str);
+    return 0;
 }
 
-int lcd(int u, int v, int h)
+void insert(char str[])
 {
-    return u * v / h;
-}
-
-int main(void)
-{
-    int a, b;
-    scanf("%d,%d", &a, &b);
-    if (a < b)
+    int len = strlen(str);
+    char a[80];
+    for (int i = 0; i < len - 1; i++)
     {
-        int t = a;
-        a = b;
-        b = t;
+        a[i*2] = str[i];
+        a[i*2+1] = ' ';
     }
-    int h = hcf(a, b);
-    int l = lcd(a, b, h);
-    printf("H.C.F=%d\nL.C.D=%d\n", h, l);
+    a[2 * len - 2] = str[len - 1];
+    a[len] = '\n';
+    strcpy(str, a);
 }
