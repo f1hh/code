@@ -1,25 +1,35 @@
 #include <stdio.h>
 int main()
 {
-    void convert(int n);
-    int number;
-    // printf("input an integer: ");
-    scanf("%d", &number);
-    printf("output: ");
-    if (number < 0)
-    {
-        putchar('-');
-        putchar(' '); // 先输出一个‘-’号和空格
-        number = -number;
-    }
-    convert(number);
-    printf("\n");
+    void countAndOut(int *, int);
+    int i, n, num[50];
+    // printf("\ninput number of person: n=");
+    scanf("%d", &n); //输入人数，不超过50
+    for (i = 0; i < n; i++)
+        num[i] = i + 1;
+    countAndOut(num, n);
     return 0;
 }
 
-void convert(int n)
+void countAndOut(int array[], int n)
 {
-    if (n > 10)
-        convert(n / 10);
-    printf("%c ", '0' + n % 10);
+    int flag = 0, i = 0, j, m = n;
+    while (m - 1)
+    {
+        i = i % n;
+        flag++;
+        if (flag == 3 && array[i] != 0)
+        {
+            flag = 0;
+            array[i] = 0;
+            m--;
+        }
+        i++;
+    }
+    for (j = 0; j < n; j++)
+    {
+        if (array[j] != 0)
+            break;
+    }
+    printf("The last one is NO.%d\n", array[j]);
 }
