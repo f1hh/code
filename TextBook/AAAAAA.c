@@ -1,29 +1,17 @@
-#include"stdio.h"
-int trap(int *height, int heightSize)
+#include <stdio.h>
+int a = 10;
+int add(int b)
 {
-    int lp = 0, rp = 1, sum = 0;
-    if (heightSize == 0)
-        return 0;
-    while (height[lp] == 0)
-    {
-        lp++;
-        rp++;
-    }
-    while (rp < heightSize)
-    {
-        while (height[rp] < height[lp])
-        {
-            sum += height[lp] - height[rp];
-            rp++;
-        }
-        lp = rp;
-        rp = lp + 1;
-    }
-    return sum;
+    a = a + b;
+    printf("%d ", a);
+    return a;
 }
-
-int main(void){
-    int height[] = {0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}, heightSize = 12,s;
-    s = trap(height, heightSize);
-    printf("%d", s);
+int main(void)
+{
+    int a = 20;
+    int b = 2;
+    int c = add(b);
+    a = a + b;
+    printf("%d", a);
+    return 0;
 }
