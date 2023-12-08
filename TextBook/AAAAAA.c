@@ -5,7 +5,7 @@ int main()
 {
     int i, a[10] = {3, 7, 9, 11, 0, 6, 7, 5, 4, 2};
     int *p;
-
+    a++;
     Rev(a, 10);
     printf("The array has been reverted:\n");
     for (
@@ -13,17 +13,4 @@ int main()
         p++)
         printf("%d,", *p);
     return 0;
-}
-void Rev(int *x, int n)
-{
-    int t, *p, *i, *j, m = (n - 1) / 2;
-    i = x;
-    j = x + n - 1;
-    p = x + m;
-    for (; i <= p; i++, j--)
-    {
-        t = *i;
-        *i = *j;
-        *j = t;
-    }
 }
