@@ -1,16 +1,12 @@
 #include <stdio.h>
-void Rev(int *x, int n);
-
 int main()
 {
-    int i, a[10] = {3, 7, 9, 11, 0, 6, 7, 5, 4, 2};
-    int *p;
-    a++;
-    Rev(a, 10);
-    printf("The array has been reverted:\n");
-    for (
-        p = a; p < a + 10;
-        p++)
-        printf("%d,", *p);
-    return 0;
+    int m[3][3];
+    printf("矩阵：\n");
+    for (int i = 0; i < 3;i++){
+        for (int j = 0; j < 3;j++){
+            scanf("%d", &m[i][j]);
+        }
+    }
+    printf("对角线和是：%d", m[1][1] + m[0][0] + m[2][2]);
 }
