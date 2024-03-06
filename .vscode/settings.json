@@ -1,9 +1,9 @@
 {
-    "files.associations": {
-        "stdio.h": "c"
-    },
-    "C_Cpp.errorSquiggles": "disabled",
-    "files.autoSave": "afterDelay",
+  "files.associations": {
+    "stdio.h": "c"
+  },
+  "C_Cpp.errorSquiggles": "disabled",
+  "files.autoSave": "afterDelay",
   "files.autoGuessEncoding": true,
   "workbench.list.smoothScrolling": true,
   "editor.cursorSmoothCaretAnimation": "on",
@@ -22,5 +22,5 @@
   "workbench.editorAssociations": {
     "*.md": "default"
   },
-"cmake.cmakePath": "/path/to/cmake",
-}   
+  "cmake.cmakePath": "/path/to/cmake",
+}

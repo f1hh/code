@@ -1,0 +1,4 @@
+output文件夹中有exe文件可以直接运行。
+若exe文件无法运行，则可以直接使用文件夹中的源代码。
+ListWrite对应的是第一个作业，建议先运行这个来增加student.txt内容。
+ListRead对应第二份作业。
