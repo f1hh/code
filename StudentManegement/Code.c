@@ -206,7 +206,7 @@ void Select_MainMenu(struct student stu[], char szCourseName[][STRLENGTH], int *
             break;
         // 用户选择退出
         case 0:
-            printf("\n\n\t\t感谢使用我们的软件，欢迎下次再来！");
+            printf("\n\n\t\t感谢使用我们的软件，欢迎下次再来！\n\n");
             exit(0);
             break;
         // 用户选择有误
@@ -246,18 +246,18 @@ void Select_ManageMenu(struct student stu[], char szCourseName[][STRLENGTH], int
         switch (nManageChoose)
         {
         case 1:
-            AddStudentInfo(stu, szCourseName, npStudentNum); // 转到增加学生信息函数
-            // OutputStudentInfo(stu,szCourseName,*npStudentNum,0,0,*npStudentNum);//输出给用户看一下
+            AddStudentInfo(stu, szCourseName, npStudentNum);                          // 转到增加学生信息函数
+            OutputStudentInfo(stu, szCourseName, *npStudentNum, 0, 0, *npStudentNum); // 输出给用户看一下
             system("PAUSE");
             break;
         case 2:
-            DeleteStudentInfo(stu, szCourseName, npStudentNum); // 转到删除学生信息函数
-            // OutputStudentInfo(stu,szCourseName,*npStudentNum,0,0,*npStudentNum);//输出给用户看一下
+            DeleteStudentInfo(stu, szCourseName, npStudentNum);                       // 转到删除学生信息函数
+            OutputStudentInfo(stu, szCourseName, *npStudentNum, 0, 0, *npStudentNum); // 输出给用户看一下
             system("PAUSE");
             break;
         case 3:
-            ModifyStudentScore(stu, szCourseName, *npStudentNum); // 转到修改学生信息函数
-            // OutputStudentInfo(stu,szCourseName,*npStudentNum,0,0,*npStudentNum);//输出给用户看一下
+            ModifyStudentScore(stu, szCourseName, *npStudentNum);                     // 转到修改学生信息函数
+            OutputStudentInfo(stu, szCourseName, *npStudentNum, 0, 0, *npStudentNum); // 输出给用户看一下
             system("PAUSE");
             break;
         case 0:
@@ -306,24 +306,22 @@ void Select_SortMenu(struct student stu[], char szCourseName[][STRLENGTH], int n
         {
         case 1:
             SortOnNumAs(stu, nStudentNum); // 按学号升序排序
-            // 添加完函数后这里就可以解开注释了
             // OutputStudentInfo(stu,szCourseName,nStudentNum,0,0,nStudentNum);//输出给用户看一下
             system("PAUSE");
             break;
         case 2:
             SortOnSumDs(stu, nStudentNum); // 按总成绩降序排序
-            // 添加完函数后这里就可以解开注释了
             // printf("\n\t\t\t计算各人总成绩及平均成绩......\n");
             // OutputStudentInfo(stu,szCourseName,nStudentNum,1,0,nStudentNum);//输出给用户看一下
             system("PAUSE");
             break;
-        case 3: // 添加完函数后这里就可以解开注释了
-                // printf("\n\t\t\t计算总成绩及平均成绩......\n");
+        case 3:
+            printf("\n\t\t\t计算总成绩及平均成绩......\n");
             ComputeAverageScore(stu, szCourseName, nStudentNum); // 按总成绩降序排序
             system("PAUSE");
             break;
-        case 4: // 添加完函数后这里就可以解开注释了
-            // printf("\n\t\t\t计算各科平均成绩及分布......\n");
+        case 4:
+            printf("\n\t\t\t计算各科平均成绩及分布......\n");
             ComputeDistribution(stu, szCourseName, nStudentNum); // 按总成绩降序排序
             system("PAUSE");
             break;
@@ -601,11 +599,35 @@ int AddStudentInfo(struct student stu[], char szCourseName[][STRLENGTH], int *np
 {
 
     printf("\n\t\t\t这里是增加学生信息模块\n");
+    int n, m, nNewStudents, x = 0;
+    printf("\t\t\t请输入要添加的学生数目：");
+    scanf("%d", &n);
+    for (m = *npStudentNum; m < (*npStudentNum + n); m++)
+    {
+        printf("\t\t\t请输入要添加的第%d个学生的信息\n", ++x);
+        printf("\t\t\t学号:");
+        scanf("%d", &stu[m].nNumber);
+        printf("\t\t\t姓名:");
+        scanf("%s", stu[m].szName);
 
-    // 待你添加代码 1
+        for (int j = 0; j < COURSENUM; j++)
+        {
+            printf("\t\t\t%s成绩：", szCourseName[j]);
+            scanf("%f", &stu[m].fScore[j]);
+        }
+        // 计算每个学生的平均分和总成绩
+        stu[m].fSumScore = 0;
+        for (int j = 0; j < COURSENUM; j++)
+        {
+            stu[m].fSumScore += stu[m].fScore[j];
+        }
+        stu[m].fAveScore = stu[m].fSumScore / COURSENUM;
+    }
 
-    return 1; // 返回添加的学生数
-
+    *npStudentNum += n; // 修改当前学生数目
+    nNewStudents = n;
+    printf("\n\t\t\t学生信息添加成功!\n");
+    return nNewStudents; // 返回添加的学生数
 } // AddSudentInfo函数结束
 
 /*
@@ -619,8 +641,32 @@ int AddStudentInfo(struct student stu[], char szCourseName[][STRLENGTH], int *np
 void OutputStudentInfo(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum, int nFlag,
                        int nFrom, int nTo)
 {
-    printf("\n\t\t\t这里是显示学生信息模块\n");
-    // 待你添加代码 2
+    printf("\n\t\t\t这里是显示学生信息模块\n\n");
+    if (nStudentNum == 0)
+    {
+        printf("\t\t\t系统中没有学生信息！\n");
+        return;
+    }
+    if (nFlag)
+    {
+        printf("\t\t\t学号 \t姓名 \t语文 \t数学 \t英语 \t平均分 \t总成绩\n");
+        printf("\t\t\t=====================================================\n");
+        for (int i = nFrom; i < nTo; i++)
+        {
+            printf("\t\t\t%d\t%s\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", stu[i].nNumber, stu[i].szName, stu[i].fScore[0], stu[i].fScore[1], stu[i].fScore[2], stu[i].fAveScore, stu[i].fSumScore);
+        }
+        printf("\t\t\t=====================================================\n");
+    }
+    else
+    {
+        printf("\t\t\t学号 \t姓名 \t语文 \t数学 \t英语\n");
+        printf("\t\t\t======================================\n");
+        for (int i = nFrom; i < nTo; i++)
+        {
+            printf("\t\t\t%d\t%s\t%.2f\t%.2f\t%.2f\n", stu[i].nNumber, stu[i].szName, stu[i].fScore[0], stu[i].fScore[1], stu[i].fScore[2]);
+        }
+        printf("\t\t\t======================================\n");
+    }
 }
 // 输出学生信息函数结束
 
@@ -633,222 +679,291 @@ void OutputStudentInfo(struct student stu[], char szCourseName[][STRLENGTH], int
 */
 int DeleteStudentInfo(struct student stu[], char szCourseName[][STRLENGTH], int *npStudentNum)
 {
-    printf("\n\t\t\t这里是删除学生信息模块\n");
+    printf("\n\t\t\t这里是删除学生信息模块\n\n");
+    char studentName[STRLENGTH];
+    int flag = 0,n=*npStudentNum;
+    printf("\t\t\t请输入要删除信息的学生姓名：");
+    scanf("%s", studentName);
+    for (int i = 0; i < n; i++)
+    {
+        if (strcmp(stu[i].szName, studentName) == 0)
+        {
+            flag = 1;
+            for (int j = i; j < n - 1; j++)
+            {
+                stu[j] = stu[j + 1];
+                /*strcpy(stu[j].szName, stu[j + 1].szName);
 
-    // 待你添加代码 3
-
-    return 1;
+                stu[j].fScore[1] = stu[j + 1].fScore[1];
+                stu[j].fScore[2] = stu[j + 1].fScore[2];
+                stu[j].fScore[3] = stu[j + 1].fScore[3];*/
+            }
+            (*npStudentNum)--;
+            // 输出删除信息后的学生数组
+            printf("\n\t\t\t成功删除%s的信息!\n", studentName);
+        }
+    }
+    if(!flag){
+        printf("\t\t\t该学生信息删除错误！\n");
+        return 0;
+    }
+    else
+        return 1;
 } // DeleteStudentInfo函数结束
 
-/*
-函数功能：修改某位学生的成绩信息，函数内部自带输入
-输入参数：学生结构体数组，课程名称数组，学生人数
-返回值：是否成功修改，0为没成功修改，1为成功修改
-*/
-int ModifyStudentScore(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum)
-{
-
-    printf("\n\t\t\t 这里是修改学生信息模块\n");
-
-    // 待你添加代码 4
-
-    return 1;
-} // ModifyScore函数结束
-
-//////////////////////////////////////////////////////////////////////////////////////
-/*排序计算相关函数*/
-/*
-函数功能：选择法实现按学号升序排序
-输入参数：学生结构体数组，学生人数
-返回值：修改共用的学生结构体数组每个学生的顺序
-*/
-
-void SortOnNumAs(struct student stu[], int nStudentNum)
-{
-    printf("\n\t\t\t这里是按学号升序排序模块\n");
-    int i, j;
-    struct student t;
-    for (i = 0; i < nStudentNum - 1; i++)
-        for (j = i + 1; j < nStudentNum; j++)
+        /*
+        函数功能：修改某位学生的成绩信息，函数内部自带输入
+        输入参数：学生结构体数组，课程名称数组，学生人数
+        返回值：是否成功修改，0为没成功修改，1为成功修改
+        */
+        int ModifyStudentScore(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum)
         {
-            if (stu[i].nNumber > stu[j].nNumber)
-            {
-                t = stu[i];
-                stu[i] = stu[j];
-                stu[j] = t;
-            }
-        }
-    printf("\t\t\t学号\t 姓名\t 语文\t 数学\t 英语\t \n");
-    printf("\t\t\t========================================\n");
-    for (i = 0; i < nStudentNum; i++)
-    {
-        printf("\t\t\t%d\t %s\t %.2f\t %.2f\t %.2f\t \n", stu[i].nNumber, stu[i].szName, stu[i].fScore[0], stu[i].fScore[1], stu[i].fScore[2]);
-    }
-    printf("\t\t\t=========================================\n");
-}
-// 按学号升序排序结束
 
-/*
-函数功能：选择法实现按总成绩降序排序
-输入参数：学生结构体数组，学生人数
-返回值：修改共用的学生结构体数组每个学生的顺序
-*/
-void SortOnSumDs(struct student stu[], int nStudentNum)
-{
-    printf("\n\t\t\t这里是计算总成绩，并按总成绩降序排序模块\n");
-    int i, j;
-    struct student t;
-    for (i = 0; i < nStudentNum; i++)
-    {
-        stu[i].fSumScore = stu[i].fScore[0] + stu[i].fScore[1] + stu[i].fScore[2];
-    }
-    for (i = 0; i < nStudentNum - 1; i++)
-        for (j = i + 1; j < nStudentNum; j++)
+            printf("\n\t\t\t 这里是修改学生信息模块\n\n");
+            char studentName[STRLENGTH];
+            char courseName[STRLENGTH];
+            float newScore;
+
+            printf("\t\t\t请输入要修改成绩的学生姓名：");
+            scanf("%s", studentName);
+
+            printf("\t\t\t请输入要修改的课程名称：");
+            scanf("%s", courseName);
+
+            printf("\t\t\t请输入新的成绩：");
+            scanf("%f", &newScore);
+
+            // 遍历学生数组，查找要修改成绩的学生
+            for (int i = 0; i < nStudentNum; i++)
+            {
+                if (strcmp(stu[i].szName, studentName) == 0)
+                {
+                    // 在该学生中查找要修改的课程
+                    for (int j = 0; j < COURSENUM; j++)
+                    {
+                        if (strcmp(szCourseName[j], courseName) == 0)
+                        {
+                            stu[i].fScore[j] = newScore;
+                            printf("\n\t\t\t已修改%s的%s成绩为%.2f\n", studentName, courseName, newScore);
+                            return 1; // 修改成功
+                        }
+                    }
+                    // 没有找到要修改的课程
+                    printf("\t\t\t%s无法修改%s课程\n", studentName, courseName);
+                    return 0; // 修改失败
+                }
+            }
+
+            // 没有找到要修改成绩的学生
+            printf("\t\t\t未找到姓名为%s的学生\n", studentName);
+            return 0; // 修改失败
+
+        } // ModifyScore函数结束
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        /*排序计算相关函数*/
+        /*
+        函数功能：选择法实现按学号升序排序
+        输入参数：学生结构体数组，学生人数
+        返回值：修改共用的学生结构体数组每个学生的顺序
+        */
+
+        void SortOnNumAs(struct student stu[], int nStudentNum)
         {
-            if (stu[i].fSumScore < stu[j].fSumScore)
+            printf("\n\t\t\t这里是按学号升序排序模块\n\n");
+            int i, j;
+            struct student t;
+            for (i = 0; i < nStudentNum - 1; i++)
+                for (j = i + 1; j < nStudentNum; j++)
+                {
+                    if (stu[i].nNumber > stu[j].nNumber)
+                    {
+                        t = stu[i];
+                        stu[i] = stu[j];
+                        stu[j] = t;
+                    }
+                }
+            printf("\t\t\t学号\t 姓名\t 语文\t 数学\t 英语\t \n");
+            printf("\t\t\t========================================\n");
+            for (i = 0; i < nStudentNum; i++)
             {
-                t = stu[i];
-                stu[i] = stu[j];
-                stu[j] = t;
+                printf("\t\t\t%d\t %s\t %.2f\t %.2f\t %.2f\t \n", stu[i].nNumber, stu[i].szName, stu[i].fScore[0], stu[i].fScore[1], stu[i].fScore[2]);
             }
+            printf("\t\t\t=========================================\n");
         }
-    printf("\t\t\t学号\t 姓名\t 语文\t 数学\t 英语\t 总成绩\t\n");
-    printf("\t\t\t================================================\n");
-    for (i = 0; i < nStudentNum; i++)
-    {
-        printf("\t\t\t%d\t %s\t %.2f\t %.2f\t %.2f\t %.2f\t\n", stu[i].nNumber, stu[i].szName, stu[i].fScore[0], stu[i].fScore[1], stu[i].fScore[2], stu[i].fSumScore);
-    }
-    printf("\t\t\t=================================================\n");
-}
-// 总成绩降序排序结束
+        // 按学号升序排序结束
 
-/*
-函数功能：计算各科平均分
-输入参数：学生结构体数组，课程名字数据，学生人数
-返回值：修改共用的学生结构体数组的每个成员的平均分
-*/
-
-void ComputeAverageScore(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum)
-{
-    printf("\n\t\t\t这里是计算学生各科平均分数模块\n");
-    int i;
-    for (i = 0; i < nStudentNum; i++)
-    {
-        stu[i].fAveScore = (stu[i].fScore[0] + stu[i].fScore[1] + stu[i].fScore[2]) / 3;
-    }
-    printf("\t\t\t学号\t 姓名\t 语文\t 数学\t 英语\t 平均分\t\n");
-    printf("\t\t\t================================================\n");
-    for (i = 0; i < nStudentNum; i++)
-    {
-        printf("\t\t\t%d\t %s\t %.2f\t %.2f\t %.2f\t %.2f\t\n", stu[i].nNumber, stu[i].szName, stu[i].fScore[0], stu[i].fScore[1], stu[i].fScore[2], stu[i].fAveScore);
-    }
-    printf("\t\t\t=================================================\n");
-}
-
-/*
-函数功能：计算并输出班级语文成绩各分数段分布情况
-    定义学生成绩分布等级如下：
-    60分以下：fail
-    60~70分 ：pass
-    70~80分 ：good
-    80~90分 ：great
-    90分以上：excellent
-输入参数：学生结构体数组，课程名字数据，学生人数
-返回值：无
-*/
-void ComputeDistribution(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum)
-{
-    printf("\n\t\t\t这里是计算各分数段分布模块\n");
-    printf("\t\t\t======================================================\n");
-    printf("\t\t\t学科\tExcellent\tGreat\tGood\tPass\tFail\n");
-    for (int i = 0; i < COURSENUM; i++){
-        printf("\t\t\t%s", szCourseName[i]);
-        float n1=0, n2=0, n3=0, n4=0, n5=0;
-        for (int j = 0; j < nStudentNum;j++){
-            if(stu[j].fScore[i] < 60)
-                n5++;
-            else if(stu[j].fScore[i] >= 60 && stu[j].fScore[i] < 70)
-                n4++;
-            else if (stu[j].fScore[i] >= 70 && stu[j].fScore[i] < 80)
-                n3++;
-            else if (stu[j].fScore[i] >= 80 && stu[j].fScore[i] <= 90)
-                n2++;
-            else
-                n1++;
-        }
-        printf(" \t%.1f%%\t\t%.1f%%\t%.1f%%\t%.1f%%\t%.1f%%\n", n1 / nStudentNum * 100, n2 / nStudentNum * 100, n3 / nStudentNum * 100, n4 / nStudentNum * 100, n5 / nStudentNum * 100);
-    }
-    printf("\t\t\t======================================================\n");
-} // 计算成绩分布情况函数结束
-
-/////////////////////////////////////////////////////////////////////////////////
-// 查询相关函数 共有2个：按学号，按姓名查找
-
-/*
-函数功能：按学号查找并输出一个学生的具体信息
-输入参数：学生结构体数组，课程名字数据，学生人数
-返回值：无
-*/
-
-void FindByNumber(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum)
-{
-    printf("\n\t\t\t这里是按学号查找学生信息模块\n");
-    printf("\t\t\t请输入要查找学生的学号：");
-    int num;
-    scanf("%d", &num);
-    int flag = 0;
-    for (int i = 0; i < nStudentNum; i++)
-    {
-        if (num == stu[i].nNumber)
+        /*
+        函数功能：选择法实现按总成绩降序排序
+        输入参数：学生结构体数组，学生人数
+        返回值：修改共用的学生结构体数组每个学生的顺序
+        */
+        void SortOnSumDs(struct student stu[], int nStudentNum)
         {
-            flag = 1;
-            printf("\n\t\t\t学号 \t姓名 \t语文 \t数学 \t英语\n");
-            printf("\t\t\t======================================\n");
-            printf("\t\t\t%d\t", stu[i].nNumber);
-            printf("%s\t", stu[i].szName);
-            for (int j = 0; j < COURSENUM; j++)
+            printf("\n\t\t\t这里是计算总成绩，并按总成绩降序排序模块\n\n");
+            int i, j;
+            struct student t;
+            for (i = 0; i < nStudentNum; i++)
             {
-                printf("%.2f\t", stu[i].fScore[j]);
+                stu[i].fSumScore = stu[i].fScore[0] + stu[i].fScore[1] + stu[i].fScore[2];
             }
-            printf("\n\t\t\t======================================\n\n\n");
+            for (i = 0; i < nStudentNum - 1; i++)
+                for (j = i + 1; j < nStudentNum; j++)
+                {
+                    if (stu[i].fSumScore < stu[j].fSumScore)
+                    {
+                        t = stu[i];
+                        stu[i] = stu[j];
+                        stu[j] = t;
+                    }
+                }
+            printf("\t\t\t学号\t 姓名\t 语文\t 数学\t 英语\t 总成绩\t\n");
+            printf("\t\t\t================================================\n");
+            for (i = 0; i < nStudentNum; i++)
+            {
+                printf("\t\t\t%d\t %s\t %.2f\t %.2f\t %.2f\t %.2f\t\n", stu[i].nNumber, stu[i].szName, stu[i].fScore[0], stu[i].fScore[1], stu[i].fScore[2], stu[i].fSumScore);
+            }
+            printf("\t\t\t=================================================\n");
         }
-    }
-    if (!flag)
-    {
-        printf("未找到该学生...\n");
-    }
-} // 按学号查询结束
+        // 总成绩降序排序结束
 
-/*
-函数功能：按姓名查找并输出一个学生的具体信息
-输入参数：学生结构体数组，课程名字数据，学生人数
-返回值：无
-*/
-void FindByName(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum)
-{
-    printf("\n\t\t\t这里是按姓名查找学生信息模块\n");
-    printf("\t\t\t请输入要查找学生的姓名：");
-    char name[STRLENGTH];
-    scanf("%s", name);
-    int flag = 0;
-    for (int i = 0; i < nStudentNum; i++)
-    {
-        if (strcmp(stu[i].szName, name) == 0)
+        /*
+        函数功能：计算各科平均分
+        输入参数：学生结构体数组，课程名字数据，学生人数
+        返回值：修改共用的学生结构体数组的每个成员的平均分
+        */
+
+        void ComputeAverageScore(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum)
         {
-            flag = 1;
-            printf("\n\t\t\t学号 \t姓名 \t语文 \t数学 \t英语\n");
-            printf("\t\t\t======================================\n");
-            printf("\t\t\t%d\t", stu[i].nNumber);
-            printf("%s\t", stu[i].szName);
-            for (int j = 0; j < COURSENUM; j++)
+            printf("\n\t\t\t这里是计算学生各科平均分数模块\n\n");
+            int i;
+            for (i = 0; i < nStudentNum; i++)
             {
-                printf("%.2f\t", stu[i].fScore[j]);
+                stu[i].fAveScore = (stu[i].fScore[0] + stu[i].fScore[1] + stu[i].fScore[2]) / 3;
             }
-            printf("\n\t\t\t======================================\n\n\n");
+            printf("\t\t\t学号\t 姓名\t 语文\t 数学\t 英语\t 平均分\t\n");
+            printf("\t\t\t===============================================\n");
+            for (i = 0; i < nStudentNum; i++)
+            {
+                printf("\t\t\t%d\t %s\t %.2f\t %.2f\t %.2f\t %.2f\t\n", stu[i].nNumber, stu[i].szName, stu[i].fScore[0], stu[i].fScore[1], stu[i].fScore[2], stu[i].fAveScore);
+            }
+            printf("\t\t\t===============================================\n");
         }
-    }
-    if (!flag)
-    {
-        printf("未找到该学生...\n");
-    }
-} // 按姓名查询结束
+
+        /*
+        函数功能：计算并输出班级语文成绩各分数段分布情况
+            定义学生成绩分布等级如下：
+            60分以下：fail
+            60~70分 ：pass
+            70~80分 ：good
+            80~90分 ：great
+            90分以上：excellent
+        输入参数：学生结构体数组，课程名字数据，学生人数
+        返回值：无
+        */
+        void ComputeDistribution(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum)
+        {
+            printf("\n\t\t\t这里是计算各分数段分布模块\n\n");
+            printf("\t\t\t======================================================\n");
+            printf("\t\t\t学科\tExcellent\tGreat\tGood\tPass\tFail\n");
+            for (int i = 0; i < COURSENUM; i++)
+            {
+                printf("\t\t\t%s", szCourseName[i]);
+                float n1 = 0, n2 = 0, n3 = 0, n4 = 0, n5 = 0;
+                for (int j = 0; j < nStudentNum; j++)
+                {
+                    if (stu[j].fScore[i] < 60)
+                        n5++;
+                    else if (stu[j].fScore[i] >= 60 && stu[j].fScore[i] < 70)
+                        n4++;
+                    else if (stu[j].fScore[i] >= 70 && stu[j].fScore[i] < 80)
+                        n3++;
+                    else if (stu[j].fScore[i] >= 80 && stu[j].fScore[i] <= 90)
+                        n2++;
+                    else
+                        n1++;
+                }
+                printf(" \t%.1f%%\t\t%.1f%%\t%.1f%%\t%.1f%%\t%.1f%%\n", n1 / nStudentNum * 100, n2 / nStudentNum * 100, n3 / nStudentNum * 100, n4 / nStudentNum * 100, n5 / nStudentNum * 100);
+            }
+            printf("\t\t\t======================================================\n");
+        } // 计算成绩分布情况函数结束
+
+        /////////////////////////////////////////////////////////////////////////////////
+        // 查询相关函数 共有2个：按学号，按姓名查找
+
+        /*
+        函数功能：按学号查找并输出一个学生的具体信息
+        输入参数：学生结构体数组，课程名字数据，学生人数
+        返回值：无
+        */
+
+        void FindByNumber(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum)
+        {
+            printf("\n\t\t\t这里是按学号查找学生信息模块\n\n");
+            printf("\t\t\t请输入要查找学生的学号：");
+            int num;
+            scanf("%d", &num);
+            int flag = 0;
+            for (int i = 0; i < nStudentNum; i++)
+            {
+                if (num == stu[i].nNumber)
+                {
+                    flag = 1;
+                    printf("\n\t\t\t学号 \t姓名");
+                    for (int i = 0; i < COURSENUM; i++)
+                    {
+                        printf(" \t%s", szCourseName[i]);
+                    }
+                    printf("\n\t\t\t======================================\n");
+                    printf("\t\t\t%d\t", stu[i].nNumber);
+                    printf("%s\t", stu[i].szName);
+                    for (int j = 0; j < COURSENUM; j++)
+                    {
+                        printf("%.2f\t", stu[i].fScore[j]);
+                    }
+                    printf("\n\t\t\t======================================\n\n\n");
+                }
+            }
+            if (!flag)
+            {
+                printf("\n\t\t\t未找到该学生...\n\n");
+            }
+        } // 按学号查询结束
+
+        /*
+        函数功能：按姓名查找并输出一个学生的具体信息
+        输入参数：学生结构体数组，课程名字数据，学生人数
+        返回值：无
+        */
+        void FindByName(struct student stu[], char szCourseName[][STRLENGTH], int nStudentNum)
+        {
+            printf("\n\t\t\t这里是按姓名查找学生信息模块\n\n");
+            printf("\t\t\t请输入要查找学生的姓名：");
+            char name[STRLENGTH];
+            scanf("%s", name);
+            int flag = 0;
+            for (int i = 0; i < nStudentNum; i++)
+            {
+                if (strcmp(stu[i].szName, name) == 0)
+                {
+                    flag = 1;
+                    printf("\n\t\t\t学号 \t姓名");
+                    for (int i = 0; i < COURSENUM; i++)
+                    {
+                        printf(" \t%s", szCourseName[i]);
+                    }
+                    printf("\n\t\t\t======================================\n");
+                    printf("\t\t\t%d\t", stu[i].nNumber);
+                    printf("%s\t", stu[i].szName);
+                    for (int j = 0; j < COURSENUM; j++)
+                    {
+                        printf("%.2f\t", stu[i].fScore[j]);
+                    }
+                    printf("\n\t\t\t======================================\n\n\n");
+                }
+            }
+            if (!flag)
+            {
+                printf("未找到该学生...\n");
+            }
+        } // 按姓名查询结束
